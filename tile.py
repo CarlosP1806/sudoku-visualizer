@@ -32,15 +32,15 @@ class Tile(Sprite):
         # Flag to determine if tile is selected
         self.selected = False
 
-        # Flag to determine if tile is part of original board
-        self.original = False
+        # Flag to determine if tile is part of final board
+        self.final = False
 
         # Font settings
         self.text_color = (0, 0, 0)
         self.font = pygame.font.SysFont(None, 48)
 
-        self.number = number
-        self.user_number = 0
+        self.number = number # Store final number of tile
+        self.user_number = 0 # Store user selected number
 
     def draw_tile(self):
         """Draw tile to the screen"""
@@ -54,18 +54,13 @@ class Tile(Sprite):
 
     def prep_number(self):
         """Create the number image"""
-        if self.original:
-            self.num_img = self.font.render(
-                str(self.number), True, (0,0,0), self.color
-            )
-        else:
-            self.num_img = self.font.render(
-                str(self.user_number), True, (0,0,0), self.color
-            )
-
+        number = self.number if self.final else self.user_number
+        self.num_img = self.font.render(
+            str(number), True, (0,0,0), self.color
+        )
         self.num_img_rect = self.num_img.get_rect()
 
-        if self.original:
+        if self.final:
             self.num_img_rect.center = self.rect.center
         else:
             self.num_img_rect.topright = self.rect.topright

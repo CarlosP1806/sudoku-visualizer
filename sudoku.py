@@ -1,6 +1,6 @@
 import time
 
-class Sudoku:
+class Solver:
     """Overall class to manage sudoku solver"""
 
     def __init__(self, visualizer, board):
@@ -43,11 +43,13 @@ class Sudoku:
 
                     # Get current tile
                     self.selected_tile = self._get_current_tile(coords)
-                    self.selected_tile.original = True
+                    self.selected_tile.final = True
 
                     # Set number of current tile
                     self.selected_tile.number = num
                     self.selected_tile.prep_number()
+                    time.sleep(0.01)
+                    self.visualizer.update_screen()
 
                     if self.solve(next_pos):
                         return True
@@ -55,13 +57,13 @@ class Sudoku:
 
                     # Delete number of current tile
                     self.selected_tile = self._get_current_tile(coords)
-                    self.selected_tile.original = True
+                    self.selected_tile.final = True
                     self.selected_tile.number = 0
                     self.selected_tile.prep_number()
 
                     self.selected_tile = None
-                    time.sleep(0.001)
-                    self.visualizer._update_screen()
+                    time.sleep(0.01)
+                    self.visualizer.update_screen()
                     
         # After all numbers tried, no solution
         return False

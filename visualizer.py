@@ -4,7 +4,7 @@ import pandas as pd
 
 from settings import Settings
 from tile import Tile
-from sudoku import Sudoku
+from sudoku import Solver
 
 class SudokuVisualizer:
     """Overall class to manage algorithm visualizer"""
@@ -29,13 +29,13 @@ class SudokuVisualizer:
         self.selected_tile = None
 
         # Solver object
-        self.solver = Sudoku(self, self.board)
+        self.solver = Solver(self, self.board)
 
     def run_visualizer(self):
         """Main loop of visualizer"""
         while True:
             self._check_events()    
-            self._update_screen()
+            self.update_screen()
 
     def _check_events(self):
         """Respond to events"""
@@ -53,11 +53,12 @@ class SudokuVisualizer:
     def _check_keydown_event(self, event):
         """Respond to key presses"""
 
+        # Solve button clicked
         if event.key == pygame.K_s:
             self.solver.solve((0,0))
 
+        # Number clicked
         if self.selected_tile:
-
             if event.key == pygame.K_0:
                 self.selected_tile.user_number = 0
             elif event.key == pygame.K_1:
@@ -79,12 +80,18 @@ class SudokuVisualizer:
             elif event.key == pygame.K_9:
                 self.selected_tile.user_number = 9
             
+            # Try to insert number into final board
             elif event.key == pygame.K_RETURN:
+                # Correct guess
                 if (self.selected_tile.user_number ==
                     self.solution[self.selected_tile.position[0]]
                     [self.selected_tile.position[1]]):
                     self.selected_tile.number = self.selected_tile.user_number
-                    self.selected_tile.original = True
+                    self.selected_tile.final = True
+
+                    self.board[self.selected_tile.position[0]] \
+                        [self.selected_tile.position[1]] = self.selected_tile.number
+                # Incorrect guess
                 else:
                     self.selected_tile.user_number = 0
 
@@ -96,7 +103,7 @@ class SudokuVisualizer:
             t for t in self.tiles if t.rect.collidepoint(mouse_pos)
         ]
 
-        if tiles_clicked and not tiles_clicked[0].original:
+        if tiles_clicked and not tiles_clicked[0].final:
             # Deselect last clicked tile
             if self.selected_tile:
                 self.selected_tile.selected = False
@@ -107,7 +114,6 @@ class SudokuVisualizer:
 
     def _create_board(self):
         """Choose random sudoku and create board along with solution"""
-
         with open("sudoku.csv", "r") as csv_file:
             sudokus = pd.read_csv("sudoku.csv")
             board_data = sudokus.sample()
@@ -141,17 +147,15 @@ class SudokuVisualizer:
                 tile = Tile(self, (i, j), number)
                 
                 if number:
-                    tile.original = True
+                    tile.final = True
 
                 tile.prep_number()
                 self.tiles.add(tile)
 
     def _draw_separation_lines(self):
         """Draw the board lines that separate tiles"""
-
-        # Vertical lines
         for i in range(9):
-            width = 4 if i%3 == 0 else 1
+            width = 4 if i % 3 == 0 else 1
             pygame.draw.line(
                 self.screen,
                 (0, 0, 0),
@@ -159,10 +163,6 @@ class SudokuVisualizer:
                 (self.settings.tile_size*i, self.settings.screen_size),
                 width=width
             )
-        
-        # Horizontal lines
-        for i in range(9):
-            width = 4 if i%3 == 0 else 1
             pygame.draw.line(
                 self.screen,
                 (0, 0, 0),
@@ -171,7 +171,7 @@ class SudokuVisualizer:
                 width=width
             )
     
-    def _update_screen(self):
+    def update_screen(self):
         """Draw Sudoku board""" 
         self.screen.fill(self.settings.bg_color)
 
@@ -179,10 +179,12 @@ class SudokuVisualizer:
         for tile in self.tiles.sprites():
             tile.draw_tile()
 
+        # Draw board lines
         self._draw_separation_lines()
 
         # Switch to newest screen
         pygame.display.flip()
+
 
 if __name__ == '__main__':
     sv = SudokuVisualizer()
