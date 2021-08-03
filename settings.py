@@ -11,4 +11,4 @@ class Settings:
         # Tile settings
         self.tile_size = self.screen_size / 9
         self.tile_color = (240, 240, 240)
-        self.selected_tile_color = (120, 120, 120)
+        self.selected_tile_color = (180, 180, 180)

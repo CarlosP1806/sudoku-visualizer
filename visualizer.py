@@ -23,7 +23,7 @@ class SudokuVisualizer:
         pygame.display.set_caption("Sudoku Solver")
 
         # Matrix to represent board
-        self.board = self._create_board()
+        self.board, self.solution = self._create_board()
         self.tiles = pygame.sprite.Group()
         self._create_tiles()
         self.selected_tile = None
@@ -59,25 +59,34 @@ class SudokuVisualizer:
         if self.selected_tile:
 
             if event.key == pygame.K_0:
-                self.selected_tile.number = 0
+                self.selected_tile.user_number = 0
             elif event.key == pygame.K_1:
-                self.selected_tile.number = 1
+                self.selected_tile.user_number = 1
             elif event.key == pygame.K_2:
-                self.selected_tile.number = 2
+                self.selected_tile.user_number = 2
             elif event.key == pygame.K_3:
-                self.selected_tile.number = 3
+                self.selected_tile.user_number = 3
             elif event.key == pygame.K_4:
-                self.selected_tile.number = 4
+                self.selected_tile.user_number = 4
             elif event.key == pygame.K_5:
-                self.selected_tile.number = 5
+                self.selected_tile.user_number = 5
             elif event.key == pygame.K_6:
-                self.selected_tile.number = 6
+                self.selected_tile.user_number = 6
             elif event.key == pygame.K_7:
-                self.selected_tile.number = 7
+                self.selected_tile.user_number = 7
             elif event.key == pygame.K_8:
-                self.selected_tile.number = 8
+                self.selected_tile.user_number = 8
             elif event.key == pygame.K_9:
-                self.selected_tile.number = 9
+                self.selected_tile.user_number = 9
+            
+            elif event.key == pygame.K_RETURN:
+                if (self.selected_tile.user_number ==
+                    self.solution[self.selected_tile.position[0]]
+                    [self.selected_tile.position[1]]):
+                    self.selected_tile.number = self.selected_tile.user_number
+                    self.selected_tile.original = True
+                else:
+                    self.selected_tile.user_number = 0
 
             self.selected_tile.prep_number()
 
@@ -97,13 +106,15 @@ class SudokuVisualizer:
             self.selected_tile.selected = True
 
     def _create_board(self):
-        """Choose random sudoku and create board"""
+        """Choose random sudoku and create board along with solution"""
 
         with open("sudoku.csv", "r") as csv_file:
             sudokus = pd.read_csv("sudoku.csv")
-            board_str = sudokus.sample().iloc[0, 0]
+            board_data = sudokus.sample()
+            board_str = board_data.iloc[0, 0]
+            solution_str = board_data.iloc[0, 1]
         
-        return self._parse_board(board_str)
+        return self._parse_board(board_str), self._parse_board(solution_str)
 
     def _parse_board(self, board_str):
         """Parse a string to sudoku board"""
@@ -127,10 +138,8 @@ class SudokuVisualizer:
                 x_coord = j * self.settings.tile_size
                 y_coord = i * self.settings.tile_size
                 number = self.board[i][j]
-                tile = Tile(self, x_coord, y_coord, number)
+                tile = Tile(self, (i, j), number)
                 
-                tile.position = (i, j) # Store position of tile in board
-
                 if number:
                     tile.original = True
 
@@ -142,20 +151,24 @@ class SudokuVisualizer:
 
         # Vertical lines
         for i in range(9):
-            pygame.draw.aaline(
+            width = 4 if i%3 == 0 else 1
+            pygame.draw.line(
                 self.screen,
                 (0, 0, 0),
                 (self.settings.tile_size*i, 0),
-                (self.settings.tile_size*i, self.settings.screen_size)
+                (self.settings.tile_size*i, self.settings.screen_size),
+                width=width
             )
         
         # Horizontal lines
         for i in range(9):
-            pygame.draw.aaline(
+            width = 4 if i%3 == 0 else 1
+            pygame.draw.line(
                 self.screen,
                 (0, 0, 0),
                 (0, self.settings.tile_size*i),
-                (self.settings.screen_size, self.settings.tile_size*i)
+                (self.settings.screen_size, self.settings.tile_size*i),
+                width=width
             )
     
     def _update_screen(self):

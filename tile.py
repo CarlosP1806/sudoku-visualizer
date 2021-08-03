@@ -5,23 +5,29 @@ from pygame.sprite import Sprite
 class Tile(Sprite):
     """Overall class to manage a Sudoku tile"""
 
-    def __init__(self, visualizer, x_coord, y_coord, number=0):
+    def __init__(self, visualizer, board_pos, number=0):
         """Create a tile at given coords"""
         super().__init__()
 
+        # Connect tile to main screen
         self.screen = visualizer.screen
         self.settings = visualizer.settings
+
+        # Color of number
         self.color = self.settings.tile_color
         self.selected_color = self.settings.selected_tile_color
 
-        self.position = (0, 0)
+        # Set position attributes
+        self.position = board_pos
+        self.x_coord = board_pos[1] * self.settings.tile_size
+        self.y_coord = board_pos[0] * self.settings.tile_size
 
-        # Create a rect and place it 
+        # Create a rect and place it appropriately 
         self.rect = pygame.Rect(0, 0, self.settings.tile_size,
             self.settings.tile_size)
         
-        self.rect.x = x_coord
-        self.rect.y = y_coord
+        self.rect.x = self.x_coord
+        self.rect.y = self.y_coord
 
         # Flag to determine if tile is selected
         self.selected = False
@@ -34,6 +40,7 @@ class Tile(Sprite):
         self.font = pygame.font.SysFont(None, 48)
 
         self.number = number
+        self.user_number = 0
 
     def draw_tile(self):
         """Draw tile to the screen"""
@@ -42,16 +49,23 @@ class Tile(Sprite):
         else:
             pygame.draw.rect(self.screen, self.selected_color, self.rect)
         
-        if self.number:
+        if self.number or self.user_number:
             self.screen.blit(self.num_img, self.num_img_rect)
 
     def prep_number(self):
         """Create the number image"""
+        if self.original:
+            self.num_img = self.font.render(
+                str(self.number), True, (0,0,0), self.color
+            )
+        else:
+            self.num_img = self.font.render(
+                str(self.user_number), True, (0,0,0), self.color
+            )
 
-        num_color = self.text_color if self.original else (0, 0, 255)
-
-        self.num_img = self.font.render(
-            str(self.number), True, num_color, self.color
-        )
         self.num_img_rect = self.num_img.get_rect()
-        self.num_img_rect.center = self.rect.center
+
+        if self.original:
+            self.num_img_rect.center = self.rect.center
+        else:
+            self.num_img_rect.topright = self.rect.topright

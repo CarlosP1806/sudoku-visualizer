@@ -6,15 +6,16 @@ class Sudoku:
     def __init__(self, visualizer, board):
         """Initialize board"""
         self.dim = 9
-        #self.board = [[None for j in range(self.dim)] for i in range(self.dim)]
+        self.end = (-1, -1)
+
+        # Connect solver to main game
         self.board = board
         self.visualizer = visualizer
         self.tiles = visualizer.tiles
-        self.end = (-1, -1)
 
         self.selected_tile = None
     
-    def print_board(self):
+    def _print_board(self):
         """Print the board to the terminal"""
         for i in range(self.dim):
             for j in range(self.dim):
@@ -25,7 +26,7 @@ class Sudoku:
         """Use backtracking to solve sudoku"""
         # When all numbers are placed, there is a solution
         if coords == self.end:
-            # self.print_board()
+            # self._print_board()
             return True
 
         next_pos = self._get_next(coords)
@@ -41,9 +42,8 @@ class Sudoku:
                     self.board[coords[0]][coords[1]] = num
 
                     # Get current tile
-                    for tile in self.tiles:
-                        if tile.position == coords:
-                            self.selected_tile = tile
+                    self.selected_tile = self._get_current_tile(coords)
+                    self.selected_tile.original = True
 
                     # Set number of current tile
                     self.selected_tile.number = num
@@ -54,11 +54,10 @@ class Sudoku:
                     self.board[coords[0]][coords[1]] = 0
 
                     # Delete number of current tile
-                    for tile in self.tiles:
-                        if tile.position == coords:
-                            self.selected_tile = tile
-                            self.selected_tile.number = 0
-                            self.selected_tile.prep_number()
+                    self.selected_tile = self._get_current_tile(coords)
+                    self.selected_tile.original = True
+                    self.selected_tile.number = 0
+                    self.selected_tile.prep_number()
 
                     self.selected_tile = None
                     time.sleep(0.001)
@@ -66,6 +65,12 @@ class Sudoku:
                     
         # After all numbers tried, no solution
         return False
+
+    def _get_current_tile(self, coords):
+        """Return tile object with given coords"""
+        for tile in self.tiles:
+            if tile.position == coords:
+                return tile
                 
     def _is_valid(self, num, coords):
         """Determine whether the given num can be placed in coords"""
