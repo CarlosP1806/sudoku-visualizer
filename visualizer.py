@@ -137,7 +137,7 @@ class SudokuVisualizer:
 
     def _parse_board(self, board_str):
         """Parse a string to sudoku board"""
-        print(board_str)
+        # print(board_str)
         board = [[0 for j in range(9)] for i in range(9)]
         counter = 0        
         for i, row in enumerate(board):
