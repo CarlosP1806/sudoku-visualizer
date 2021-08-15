@@ -59,43 +59,56 @@ class SudokuVisualizer:
 
         # Number clicked
         if self.selected_tile:
-            if event.key == pygame.K_0:
-                self.selected_tile.user_number = 0
-            elif event.key == pygame.K_1:
-                self.selected_tile.user_number = 1
-            elif event.key == pygame.K_2:
-                self.selected_tile.user_number = 2
-            elif event.key == pygame.K_3:
-                self.selected_tile.user_number = 3
-            elif event.key == pygame.K_4:
-                self.selected_tile.user_number = 4
-            elif event.key == pygame.K_5:
-                self.selected_tile.user_number = 5
-            elif event.key == pygame.K_6:
-                self.selected_tile.user_number = 6
-            elif event.key == pygame.K_7:
-                self.selected_tile.user_number = 7
-            elif event.key == pygame.K_8:
-                self.selected_tile.user_number = 8
-            elif event.key == pygame.K_9:
-                self.selected_tile.user_number = 9
+            self._check_number_click(event)
             
             # Try to insert number into final board
-            elif event.key == pygame.K_RETURN:
-                # Correct guess
-                if (self.selected_tile.user_number ==
-                    self.solution[self.selected_tile.position[0]]
-                    [self.selected_tile.position[1]]):
-                    self.selected_tile.number = self.selected_tile.user_number
-                    self.selected_tile.final = True
-
-                    self.board[self.selected_tile.position[0]] \
-                        [self.selected_tile.position[1]] = self.selected_tile.number
-                # Incorrect guess
-                else:
-                    self.selected_tile.user_number = 0
+            if event.key == pygame.K_RETURN:
+                self._check_enter_press()
 
             self.selected_tile.prep_number()
+
+    def _check_number_click(self, event):
+        """Respond to number presses"""
+        if event.key == pygame.K_0:
+            self.selected_tile.user_number = 0
+        elif event.key == pygame.K_1:
+            self.selected_tile.user_number = 1
+        elif event.key == pygame.K_2:
+            self.selected_tile.user_number = 2
+        elif event.key == pygame.K_3:
+            self.selected_tile.user_number = 3
+        elif event.key == pygame.K_4:
+            self.selected_tile.user_number = 4
+        elif event.key == pygame.K_5:
+            self.selected_tile.user_number = 5
+        elif event.key == pygame.K_6:
+            self.selected_tile.user_number = 6
+        elif event.key == pygame.K_7:
+            self.selected_tile.user_number = 7
+        elif event.key == pygame.K_8:
+            self.selected_tile.user_number = 8
+        elif event.key == pygame.K_9:
+            self.selected_tile.user_number = 9
+        
+    def _check_enter_press(self):
+        """Determine if user number is correct number"""
+        
+        # Get correct number from solution board
+        correct_number = (self.solution[self.selected_tile.position[0]]
+                         [self.selected_tile.position[1]])
+
+        # Correct guess
+        if (self.selected_tile.user_number == correct_number):
+            self.selected_tile.number = self.selected_tile.user_number
+            self.selected_tile.final = True
+
+            # Update board number
+            self.board[self.selected_tile.position[0]] \
+                [self.selected_tile.position[1]] = self.selected_tile.number
+
+        # Incorrect guess
+        else:
+            self.selected_tile.user_number = 0
 
     def _check_mouse_click(self, mouse_pos):
         """Respond to click on tile"""
@@ -125,9 +138,7 @@ class SudokuVisualizer:
     def _parse_board(self, board_str):
         """Parse a string to sudoku board"""
         print(board_str)
-
         board = [[0 for j in range(9)] for i in range(9)]
-
         counter = 0        
         for i, row in enumerate(board):
             for j, element in enumerate(row):
@@ -138,7 +149,6 @@ class SudokuVisualizer:
 
     def _create_tiles(self):
         """Create and place sudoku tiles"""
-
         for i in range(9):
             for j in range(9):
                 x_coord = j * self.settings.tile_size

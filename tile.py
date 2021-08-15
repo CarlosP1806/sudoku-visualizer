@@ -32,7 +32,7 @@ class Tile(Sprite):
         # Flag to determine if tile is selected
         self.selected = False
 
-        # Flag to determine if tile is part of final board
+        # Flag to determine if tile is part of final (solved) board
         self.final = False
 
         # Font settings
@@ -53,13 +53,14 @@ class Tile(Sprite):
             self.screen.blit(self.num_img, self.num_img_rect)
 
     def prep_number(self):
-        """Create the number image"""
+        """Create and position the number image"""
         number = self.number if self.final else self.user_number
         self.num_img = self.font.render(
             str(number), True, (0,0,0), self.color
         )
         self.num_img_rect = self.num_img.get_rect()
 
+        # Place according to type of tile
         if self.final:
             self.num_img_rect.center = self.rect.center
         else:
