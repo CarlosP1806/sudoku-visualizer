@@ -19,9 +19,9 @@ Download the files in one directory and run the following command in terminal:
 ## Usage
 Select desired tile to place a number between 1 and 9. This will place a provisional number in the tile. When you are sure of your decision, press *enter* to verify if placed number was correct. If you are stuck or you just want to watch the algorithm solve the sudoku, press key *s*.
 
-![Unsolved Soduku](assets/images/unsolved.png)
+![Unsolved Soduku](assets/images/unsolved_sudoku.png)
 
-![Solved Sudoku](assets/images/solved.png)
+![Solved Sudoku](assets/images/solved_sudoku.png)
 
 ## Credits
 All data of file "sudoku.csv" is retrieved from Kaggle. Original author is user Kyubyong Parg. File can be downloaded at
