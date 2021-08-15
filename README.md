@@ -21,8 +21,7 @@ Select desired tile to place a number between 1 and 9. This will place a provisi
 
 ![Unsolved Soduku](assets/images/unsolved.png)
 
-![Solved Sudoku](assets/images/solved.png
-)
+![Solved Sudoku](assets/images/solved.png)
 
 ## Credits
 All data of file "sudoku.csv" is retrieved from Kaggle. Original author is user Kyubyong Parg. File can be downloaded at
