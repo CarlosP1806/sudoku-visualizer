@@ -10,14 +10,14 @@ In the future, I hope to polish the visuals of the application and to make it mo
 
 ## How to Run
 
-Download the files and run the following command in terminal:
+Download the files in one directory and run the following command in terminal:
 
 ```bash
     python3 visualizer.py
 ```
 
 ## Usage
-Select desired tile to place a number between 1 and 9. Use key '0' to delete a previously placed number. Try to solve the puzzle following the usual rules of Sudoku. To run the visualization of backtracking algorithm, press key 's'.
+Select desired tile to place a number between 1 and 9. When you are sure of your decision, press *enter* to verify if placed number was correct. If you are stuck or you just want to watch the algorithm solve the sudoku, press key *s*.
 
 ![Unsolved Soduku](assets/images/unsolved_sudoku.png)
 
