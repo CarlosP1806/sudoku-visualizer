@@ -2,22 +2,28 @@
 
 ## Description 
 
-This project is a visualization of a simple backtracking algorithm to solve a sudoku. The user can also try to solve the sudoku on its own before watching the algorithm's solution. I was motivated to build this project to practice both my algorithm design and to reinforce my python knowledge. 
+This project is a visualization of a backtracking algorithm that solves a classic sudoku puzzle. In addition, the user can also try to solve the sudoku on their own before watching the algorithm's solution. This is my first Python project, so I was motivated to build it to practice both my problem solving and coding knowledge. Moreover, all the project is object-oriented, as I wanted to expand my understanding of Python classes. 
 
-I used the pygame library to build the visualization. All the project is object-oriented, as I wanted to expand my knowledge on python classes.
+## Technologies
 
-In the future, I hope to polish the visuals of the application and to make it more interactive (adding timer, improving number placement mechanism, saving current sudoku to continue later).
+- Python 3
+- Pygame (to build visualization)
+- Pandas (to store and manage sudoku database)
 
-## How to Run
+## Installation
 
-Download the files in one directory and run the following command in terminal:
+Download all .py and .csv files and save them in a local directory of your choice. Be sure to have Python3, Pygame and Pandas installed to run the project. In order to start the program, type the following command in terminal:
 
 ```bash
     python3 visualizer.py
 ```
 
 ## Usage
-Select desired tile to place a number between 1 and 9. This will place a provisional number in the tile. When you are sure of your decision, press *enter* to verify if placed number was correct. If you are stuck or you just want to watch the algorithm solve the sudoku, press key *s*.
+When the application first opens, the user will be presented with a random sudoku from the database. These are the keys used to interact with the visualization:
+- Use mouse to select a tile where you want to place a number
+- When a tile is selected, type a number from 1 to 9 to place a provisional number
+- When a tile with a provisional number is selected, press Enter to verify if number was correct (if it was, it will turn into a normal tile). Press 0 to delete provisional number
+- To start the algorithm visualization, press s.
 
 ![Unsolved Soduku](assets/images/unsolved.png)
 
